@@ -980,24 +980,24 @@ Tagify.prototype = {
         let lastIndex = 0;
 
         for (const match of matches) {
-          const tagIndex = match.index;
-          const tagText = match[1];
+            const tagIndex = match.index;
+            const tagText = match[1];
 
-          if (tagIndex > lastIndex) {
-            result.push({ type: "text", value: inputString.substring(lastIndex, tagIndex) });
-          }
+            if (tagIndex > lastIndex) {
+                result.push({ type: "text", value: inputString.substring(lastIndex, tagIndex) });
+            }
 
-          try {
-            result.push({ type: "tag", value: JSON.parse(tagText) });
-          } catch {
-            result.push({ type: "tag", value: {value: tagText} });
-          }
+            try {
+                result.push({ type: "tag", value: JSON.parse(tagText) });
+            } catch(error) {
+                result.push({ type: "tag", value: {value: tagText} });
+            }
 
-          lastIndex = tagIndex + match[0].length;
+            lastIndex = tagIndex + match[0].length;
         }
 
         if (lastIndex < inputString.length) {
-          result.push({ type: "text", value: inputString.substring(lastIndex) });
+            result.push({ type: "text", value: inputString.substring(lastIndex) });
         }
 
         return result;
@@ -1017,26 +1017,26 @@ Tagify.prototype = {
             this.value.push(item.value);
 
             switch (item.type) {
-              case 'text':
-                return escapeMixedText ? escapeHTML(item.value) : item.value;
+                case 'text':
+                    return escapeMixedText ? escapeHTML(item.value) : item.value;
 
-              case 'tag':
-                if (tagsDataSet.length >= maxTags) return
-                if (enforceWhitelist && !this.isTagWhitelisted(item.value)) return
-                if (!duplicates && this.isTagDuplicate(item.value)) return
+                case 'tag':
+                    if (tagsDataSet.length >= maxTags) return
+                    if (enforceWhitelist && !this.isTagWhitelisted(item.value)) return
+                    if (!duplicates && this.isTagDuplicate(item.value)) return
 
-                transformTag.call(this, item.value)
-                tagsDataSet.push(item.value);
-                this.value.push(item.value);
+                    transformTag.call(this, item.value)
+                    tagsDataSet.push(item.value);
+                    this.value.push(item.value);
 
-                const tagElm = this.createTagElem(item.value);
-                tagElm.classList.add(this.settings.classNames.tagNoAnimation);
-                return tagElm.outerHTML;
+                    const tagElm = this.createTagElem(item.value);
+                    tagElm.classList.add(this.settings.classNames.tagNoAnimation);
+                    return tagElm.outerHTML;
 
-              default:
-                break;
-            }
-          }).join('');
+                default:
+                    break;
+                }
+        }).join('');
 
         this.DOM.input.innerHTML = mapOutput
         this.DOM.input.appendChild(document.createTextNode(''))
